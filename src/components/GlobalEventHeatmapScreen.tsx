@@ -1,12 +1,17 @@
 import { useState, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Sparkles, Loader2 } from 'lucide-react';
 import { Header } from './Header';
 import { LeftSidebarFilters } from './LeftSidebarFilters';
 import { RightEventDetailPanel } from './RightEventDetailPanel';
 import { BottomModeSwitcher } from './BottomModeSwitcher';
 import { WorldMap } from './WorldMap';
+import { PrioritizationPanel } from './PrioritizationPanel';
+import { Button } from '@/components/ui/button';
 import { getEventsByDomain } from '@/data/mockEvents';
 import { GlobalEvent, FilterState, EventCategory, ViewMode, CATEGORY_CONFIG } from '@/types/event';
+import { PrioritizedAction } from '@/types/prioritization';
+import { generatePrioritizedActions, simulateAIDelay } from '@/utils/mockPrioritization';
 
 interface GlobalEventHeatmapScreenProps {
   domain: string;
@@ -25,6 +30,9 @@ export const GlobalEventHeatmapScreen = ({ domain, onReset }: GlobalEventHeatmap
   const [selectedEvent, setSelectedEvent] = useState<GlobalEvent | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>('heat');
   const [searchQuery, setSearchQuery] = useState('');
+  const [showPrioritization, setShowPrioritization] = useState(false);
+  const [isGeneratingPriorities, setIsGeneratingPriorities] = useState(false);
+  const [prioritizedActions, setPrioritizedActions] = useState<PrioritizedAction[]>([]);
 
   const allEvents = useMemo(() => getEventsByDomain(domain), [domain]);
 
@@ -68,6 +76,24 @@ export const GlobalEventHeatmapScreen = ({ domain, onReset }: GlobalEventHeatmap
     setSelectedEvent(null);
   };
 
+  const handleGeneratePriorities = async () => {
+    setIsGeneratingPriorities(true);
+    setShowPrioritization(true);
+    setPrioritizedActions([]);
+
+    // Simulate AI processing delay
+    await simulateAIDelay();
+
+    // Generate mock prioritized actions
+    const actions = generatePrioritizedActions(filteredEvents, domain);
+    setPrioritizedActions(actions);
+    setIsGeneratingPriorities(false);
+  };
+
+  const handleClosePrioritization = () => {
+    setShowPrioritization(false);
+  };
+
   return (
     <motion.div
       className="h-screen flex flex-col overflow-hidden"
@@ -102,18 +128,46 @@ export const GlobalEventHeatmapScreen = ({ domain, onReset }: GlobalEventHeatmap
           {/* Mode Switcher */}
           <BottomModeSwitcher currentMode={viewMode} onModeChange={setViewMode} />
 
-          {/* Event count badge */}
-          <motion.div
-            className="absolute top-4 right-4 glass-panel px-4 py-2 z-40"
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.3 }}
-          >
-            <span className="text-sm text-muted-foreground">
-              Showing{' '}
-              <span className="font-semibold text-primary">{filteredEvents.length}</span> events
-            </span>
-          </motion.div>
+          {/* Top Controls */}
+          <div className="absolute top-4 right-4 flex items-center gap-3 z-40">
+            {/* Generate Priorities Button */}
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.2 }}
+            >
+              <Button
+                onClick={handleGeneratePriorities}
+                disabled={isGeneratingPriorities || filteredEvents.length === 0}
+                className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white shadow-lg"
+              >
+                {isGeneratingPriorities ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Analyzing...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-4 h-4 mr-2" />
+                    Generate Prioritized Actions
+                  </>
+                )}
+              </Button>
+            </motion.div>
+
+            {/* Event count badge */}
+            <motion.div
+              className="glass-panel px-4 py-2"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.3 }}
+            >
+              <span className="text-sm text-muted-foreground">
+                Showing{' '}
+                <span className="font-semibold text-primary">{filteredEvents.length}</span> events
+              </span>
+            </motion.div>
+          </div>
         </main>
 
         {/* Right Detail Panel */}
@@ -121,6 +175,18 @@ export const GlobalEventHeatmapScreen = ({ domain, onReset }: GlobalEventHeatmap
           <RightEventDetailPanel event={selectedEvent} onClose={handleCloseDetail} userDomain={domain} />
         )}
       </div>
+
+      {/* Prioritization Panel */}
+      <AnimatePresence>
+        {showPrioritization && (
+          <PrioritizationPanel
+            actions={prioritizedActions}
+            isLoading={isGeneratingPriorities}
+            onClose={handleClosePrioritization}
+            domain={domain}
+          />
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };
