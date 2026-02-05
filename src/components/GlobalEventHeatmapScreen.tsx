@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Loader2 } from 'lucide-react';
 import { Header } from './Header';
@@ -8,10 +8,11 @@ import { BottomModeSwitcher } from './BottomModeSwitcher';
 import { WorldMap } from './WorldMap';
 import { PrioritizationPanel } from './PrioritizationPanel';
 import { Button } from '@/components/ui/button';
-import { getEventsByDomain } from '@/data/mockEvents';
 import { GlobalEvent, FilterState, EventCategory, ViewMode, CATEGORY_CONFIG } from '@/types/event';
 import { PrioritizedAction } from '@/types/prioritization';
-import { generatePrioritizedActions, simulateAIDelay } from '@/utils/mockPrioritization';
+import { useNewsSearch } from '@/hooks/useNewsSearch';
+import { usePrioritization } from '@/hooks/usePrioritization';
+import { toast } from 'sonner';
 
 interface GlobalEventHeatmapScreenProps {
   domain: string;
@@ -29,29 +30,47 @@ export const GlobalEventHeatmapScreen = ({ domain, onReset }: GlobalEventHeatmap
   const [filters, setFilters] = useState<FilterState>(initialFilters);
   const [selectedEvent, setSelectedEvent] = useState<GlobalEvent | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>('heat');
-  const [searchQuery, setSearchQuery] = useState('');
   const [showPrioritization, setShowPrioritization] = useState(false);
-  const [isGeneratingPriorities, setIsGeneratingPriorities] = useState(false);
   const [prioritizedActions, setPrioritizedActions] = useState<PrioritizedAction[]>([]);
+  const [newsEvents, setNewsEvents] = useState<GlobalEvent[]>([]);
 
-  const allEvents = useMemo(() => getEventsByDomain(domain), [domain]);
+  const { mutate: searchNews, isPending: isSearching } = useNewsSearch({
+    userDomain: domain,
+    onSuccess: (events) => {
+      setNewsEvents(events);
+      if (events.length === 0) {
+        toast.info('No results found for your domain');
+      }
+    },
+    onError: (error) => {
+      toast.error(`Search failed: ${error.message}`);
+    },
+  });
+
+  const { mutate: generatePriorities, isPending: isGeneratingPriorities } = usePrioritization({
+    onSuccess: (actions) => {
+      setPrioritizedActions(actions);
+      toast.success(`Generated ${actions.length} prioritized actions`);
+    },
+    onError: (error) => {
+      toast.error(`Analysis failed: ${error.message}`);
+    },
+  });
+
+  // Search on mount with the domain
+  useEffect(() => {
+    searchNews(domain);
+  }, [domain]);
+
+  const allEvents = newsEvents;
 
   const filteredEvents = useMemo(() => {
     return allEvents.filter((event) => {
       // Filter by category
       if (!filters.categories.includes(event.category)) return false;
-
-      // Filter by search query
-      if (searchQuery) {
-        const query = searchQuery.toLowerCase();
-        const matchesTitle = event.title.toLowerCase().includes(query);
-        const matchesSummary = event.summary.toLowerCase().includes(query);
-        if (!matchesTitle && !matchesSummary) return false;
-      }
-
       return true;
     });
-  }, [allEvents, filters, searchQuery]);
+  }, [allEvents, filters]);
 
   const eventCounts = useMemo(() => {
     const counts: Record<EventCategory, number> = {
@@ -76,18 +95,14 @@ export const GlobalEventHeatmapScreen = ({ domain, onReset }: GlobalEventHeatmap
     setSelectedEvent(null);
   };
 
-  const handleGeneratePriorities = async () => {
-    setIsGeneratingPriorities(true);
+  const handleGeneratePriorities = () => {
     setShowPrioritization(true);
     setPrioritizedActions([]);
-
-    // Simulate AI processing delay
-    await simulateAIDelay();
-
-    // Generate mock prioritized actions
-    const actions = generatePrioritizedActions(filteredEvents, domain);
-    setPrioritizedActions(actions);
-    setIsGeneratingPriorities(false);
+    generatePriorities({
+      events: filteredEvents,
+      domain,
+      maxActions: 8,
+    });
   };
 
   const handleClosePrioritization = () => {
@@ -103,8 +118,6 @@ export const GlobalEventHeatmapScreen = ({ domain, onReset }: GlobalEventHeatmap
     >
       <Header
         domain={domain}
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
         onReset={onReset}
       />
 
@@ -124,6 +137,19 @@ export const GlobalEventHeatmapScreen = ({ domain, onReset }: GlobalEventHeatmap
             onEventSelect={handleEventSelect}
             viewMode={viewMode}
           />
+
+          {/* Loading State */}
+          {isSearching && (
+            <div className="absolute inset-0 flex items-center justify-center bg-background/80 backdrop-blur-sm z-30">
+              <div className="text-center max-w-md p-8">
+                <Loader2 className="w-16 h-16 text-primary mx-auto mb-4 animate-spin" />
+                <h2 className="text-xl font-semibold mb-2">Fetching News</h2>
+                <p className="text-muted-foreground">
+                  Searching for news related to "{domain}"...
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* Mode Switcher */}
           <BottomModeSwitcher currentMode={viewMode} onModeChange={setViewMode} />
