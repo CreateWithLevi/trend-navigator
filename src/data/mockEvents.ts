@@ -1,0 +1,355 @@
+import { GlobalEvent } from '@/types/event';
+
+export const mockEvents: GlobalEvent[] = [
+  {
+    id: '1',
+    title: 'Ethereum L2 Surge in Singapore',
+    summary: 'Major DeFi protocols are migrating to Layer 2 solutions in Southeast Asia, with Singapore emerging as a key hub for institutional adoption.',
+    lat: 1.3521,
+    lng: 103.8198,
+    category: 'trend',
+    heat: 92,
+    metrics: { news: 85, reddit: 78, twitter: 95, googleTrend: 88 },
+    timeline: [
+      { date: '2024-01-15', title: 'Initial announcement', description: 'First reports of institutional interest' },
+      { date: '2024-01-20', title: 'Major partnership', description: 'Top 5 DeFi protocol announces expansion' },
+      { date: '2024-01-25', title: 'Regulatory clarity', description: 'Singapore MAS provides guidelines' },
+    ],
+    related: [
+      { name: 'Arbitrum', type: 'technology' },
+      { name: 'Singapore MAS', type: 'organization' },
+      { name: 'DBS Bank', type: 'organization' },
+    ],
+    impact: [
+      { area: 'Market Access', level: 'high', description: 'Opens institutional DeFi markets in APAC' },
+      { area: 'Regulatory Precedent', level: 'medium', description: 'May influence other Asian markets' },
+    ],
+    relevanceToUserDomain: 95,
+    domain: 'DeFi investment tools',
+  },
+  {
+    id: '2',
+    title: 'AI Trading Bot Regulations EU',
+    summary: 'European Union proposes new framework for AI-powered trading algorithms, affecting automated DeFi strategies.',
+    lat: 50.8503,
+    lng: 4.3517,
+    category: 'market',
+    heat: 78,
+    metrics: { news: 92, reddit: 45, twitter: 72, googleTrend: 65 },
+    timeline: [
+      { date: '2024-01-10', title: 'Draft proposal', description: 'EU Commission releases initial draft' },
+      { date: '2024-01-18', title: 'Industry feedback', description: 'Major players submit comments' },
+    ],
+    related: [
+      { name: 'European Commission', type: 'organization' },
+      { name: 'Brussels', type: 'location' },
+    ],
+    impact: [
+      { area: 'Compliance Costs', level: 'high', description: 'New requirements for algorithmic trading' },
+      { area: 'Innovation Speed', level: 'medium', description: 'May slow EU-based development' },
+    ],
+    relevanceToUserDomain: 88,
+    domain: 'DeFi investment tools',
+  },
+  {
+    id: '3',
+    title: 'New Yield Aggregator Launch SF',
+    summary: 'Y Combinator-backed startup launches innovative yield optimization protocol with novel risk management.',
+    lat: 37.7749,
+    lng: -122.4194,
+    category: 'tool',
+    heat: 85,
+    metrics: { news: 72, reddit: 88, twitter: 90, googleTrend: 78 },
+    timeline: [
+      { date: '2024-01-22', title: 'Beta launch', description: 'Private beta with select users' },
+      { date: '2024-01-28', title: 'Public announcement', description: 'Official launch announcement' },
+    ],
+    related: [
+      { name: 'Y Combinator', type: 'organization' },
+      { name: 'San Francisco', type: 'location' },
+      { name: 'Vitalik Buterin', type: 'person' },
+    ],
+    impact: [
+      { area: 'Competition', level: 'high', description: 'Direct competitor to existing yield aggregators' },
+      { area: 'User Acquisition', level: 'medium', description: 'May capture retail DeFi users' },
+    ],
+    relevanceToUserDomain: 92,
+    domain: 'DeFi investment tools',
+  },
+  {
+    id: '4',
+    title: 'Cross-chain Bridge API Beta',
+    summary: 'Major infrastructure provider releases unified API for cross-chain asset transfers with enhanced security.',
+    lat: 51.5074,
+    lng: -0.1278,
+    category: 'api',
+    heat: 72,
+    metrics: { news: 65, reddit: 82, twitter: 75, googleTrend: 58 },
+    timeline: [
+      { date: '2024-01-20', title: 'API documentation', description: 'Developer docs released' },
+    ],
+    related: [
+      { name: 'Chainlink', type: 'technology' },
+      { name: 'London', type: 'location' },
+    ],
+    impact: [
+      { area: 'Developer Experience', level: 'high', description: 'Simplifies cross-chain integration' },
+    ],
+    relevanceToUserDomain: 85,
+    domain: 'DeFi investment tools',
+  },
+  {
+    id: '5',
+    title: 'Binance DeFi Expansion Dubai',
+    summary: 'Binance announces major DeFi product suite launch targeting Middle East institutional investors.',
+    lat: 25.2048,
+    lng: 55.2708,
+    category: 'competitor',
+    heat: 88,
+    metrics: { news: 95, reddit: 72, twitter: 88, googleTrend: 82 },
+    timeline: [
+      { date: '2024-01-12', title: 'Strategy reveal', description: 'Binance CEO announces ME focus' },
+      { date: '2024-01-24', title: 'Product launch', description: 'First products go live' },
+    ],
+    related: [
+      { name: 'Binance', type: 'organization' },
+      { name: 'Dubai', type: 'location' },
+      { name: 'CZ', type: 'person' },
+    ],
+    impact: [
+      { area: 'Market Share', level: 'high', description: 'Major competitive threat in region' },
+      { area: 'Pricing Pressure', level: 'medium', description: 'May drive down fees' },
+    ],
+    relevanceToUserDomain: 90,
+    domain: 'DeFi investment tools',
+  },
+  {
+    id: '6',
+    title: 'Gas Fee Frustration Tokyo',
+    summary: 'Japanese crypto community reports significant user churn due to high Ethereum gas fees, seeking alternatives.',
+    lat: 35.6762,
+    lng: 139.6503,
+    category: 'pain',
+    heat: 68,
+    metrics: { news: 45, reddit: 85, twitter: 78, googleTrend: 62 },
+    timeline: [
+      { date: '2024-01-08', title: 'Community survey', description: 'Survey reveals 60% cite gas as pain point' },
+    ],
+    related: [
+      { name: 'Tokyo', type: 'location' },
+      { name: 'bitFlyer', type: 'organization' },
+    ],
+    impact: [
+      { area: 'User Retention', level: 'high', description: 'Opportunity to solve gas optimization' },
+    ],
+    relevanceToUserDomain: 82,
+    domain: 'DeFi investment tools',
+  },
+  {
+    id: '7',
+    title: 'DeFi Insurance Protocol Berlin',
+    summary: 'German fintech launches comprehensive DeFi insurance covering smart contract risks and impermanent loss.',
+    lat: 52.52,
+    lng: 13.405,
+    category: 'tool',
+    heat: 75,
+    metrics: { news: 70, reddit: 78, twitter: 72, googleTrend: 68 },
+    timeline: [
+      { date: '2024-01-16', title: 'Seed funding', description: '$15M raised from a16z' },
+      { date: '2024-01-26', title: 'Mainnet launch', description: 'Protocol goes live' },
+    ],
+    related: [
+      { name: 'Berlin', type: 'location' },
+      { name: 'a16z', type: 'organization' },
+    ],
+    impact: [
+      { area: 'Risk Management', level: 'high', description: 'New tool category for DeFi safety' },
+    ],
+    relevanceToUserDomain: 88,
+    domain: 'DeFi investment tools',
+  },
+  {
+    id: '8',
+    title: 'Stablecoin Depegging Seoul',
+    summary: 'Regional stablecoin experiences temporary depeg, highlighting systemic risks in Asian DeFi markets.',
+    lat: 37.5665,
+    lng: 126.978,
+    category: 'market',
+    heat: 82,
+    metrics: { news: 88, reddit: 75, twitter: 85, googleTrend: 78 },
+    timeline: [
+      { date: '2024-01-21', title: 'Depeg event', description: 'Token drops to $0.92' },
+      { date: '2024-01-22', title: 'Recovery', description: 'Peg restored after intervention' },
+    ],
+    related: [
+      { name: 'Seoul', type: 'location' },
+      { name: 'Terra', type: 'technology' },
+    ],
+    impact: [
+      { area: 'Market Confidence', level: 'high', description: 'Trust concerns in stablecoins' },
+      { area: 'Regulatory Response', level: 'medium', description: 'May trigger stricter oversight' },
+    ],
+    relevanceToUserDomain: 78,
+    domain: 'DeFi investment tools',
+  },
+  {
+    id: '9',
+    title: 'Real-time Analytics API Launch',
+    summary: 'Blockchain data provider releases low-latency API for DeFi portfolio tracking and risk monitoring.',
+    lat: 40.7128,
+    lng: -74.006,
+    category: 'api',
+    heat: 70,
+    metrics: { news: 62, reddit: 75, twitter: 72, googleTrend: 65 },
+    timeline: [
+      { date: '2024-01-19', title: 'Developer preview', description: 'Beta access for partners' },
+    ],
+    related: [
+      { name: 'New York', type: 'location' },
+      { name: 'Dune Analytics', type: 'organization' },
+    ],
+    impact: [
+      { area: 'Data Access', level: 'medium', description: 'Enables real-time DeFi dashboards' },
+    ],
+    relevanceToUserDomain: 86,
+    domain: 'DeFi investment tools',
+  },
+  {
+    id: '10',
+    title: 'Institutional DeFi Entry Sydney',
+    summary: 'Australian superannuation fund announces first DeFi allocation, signaling institutional acceptance.',
+    lat: -33.8688,
+    lng: 151.2093,
+    category: 'trend',
+    heat: 80,
+    metrics: { news: 82, reddit: 65, twitter: 78, googleTrend: 75 },
+    timeline: [
+      { date: '2024-01-23', title: 'Announcement', description: '$50M allocation revealed' },
+    ],
+    related: [
+      { name: 'Sydney', type: 'location' },
+      { name: 'AustralianSuper', type: 'organization' },
+    ],
+    impact: [
+      { area: 'Institutional Adoption', level: 'high', description: 'Precedent for pension funds' },
+    ],
+    relevanceToUserDomain: 90,
+    domain: 'DeFi investment tools',
+  },
+  {
+    id: '11',
+    title: 'MEV Protection Solution Zurich',
+    summary: 'Swiss crypto firm develops novel MEV protection mechanism for DeFi traders.',
+    lat: 47.3769,
+    lng: 8.5417,
+    category: 'tool',
+    heat: 74,
+    metrics: { news: 68, reddit: 80, twitter: 75, googleTrend: 70 },
+    timeline: [
+      { date: '2024-01-17', title: 'Whitepaper', description: 'Technical solution published' },
+    ],
+    related: [
+      { name: 'Zurich', type: 'location' },
+      { name: 'Flashbots', type: 'technology' },
+    ],
+    impact: [
+      { area: 'Trading Costs', level: 'medium', description: 'Reduces MEV extraction losses' },
+    ],
+    relevanceToUserDomain: 84,
+    domain: 'DeFi investment tools',
+  },
+  {
+    id: '12',
+    title: 'DAO Governance Platform Toronto',
+    summary: 'Canadian startup launches enterprise-grade DAO management platform with compliance features.',
+    lat: 43.6532,
+    lng: -79.3832,
+    category: 'tool',
+    heat: 65,
+    metrics: { news: 58, reddit: 72, twitter: 68, googleTrend: 60 },
+    timeline: [
+      { date: '2024-01-25', title: 'Product launch', description: 'Enterprise tier available' },
+    ],
+    related: [
+      { name: 'Toronto', type: 'location' },
+      { name: 'Aragon', type: 'technology' },
+    ],
+    impact: [
+      { area: 'Governance Tools', level: 'medium', description: 'Simplifies DAO operations' },
+    ],
+    relevanceToUserDomain: 72,
+    domain: 'DeFi investment tools',
+  },
+  {
+    id: '13',
+    title: 'Crypto Tax Compliance Pain Mumbai',
+    summary: 'Indian DeFi users struggle with complex tax reporting requirements, seeking automated solutions.',
+    lat: 19.076,
+    lng: 72.8777,
+    category: 'pain',
+    heat: 71,
+    metrics: { news: 55, reddit: 82, twitter: 75, googleTrend: 68 },
+    timeline: [
+      { date: '2024-01-14', title: 'Tax deadline', description: 'New reporting rules take effect' },
+    ],
+    related: [
+      { name: 'Mumbai', type: 'location' },
+      { name: 'Indian Tax Authority', type: 'organization' },
+    ],
+    impact: [
+      { area: 'Compliance', level: 'high', description: 'Opportunity for tax automation tools' },
+    ],
+    relevanceToUserDomain: 76,
+    domain: 'DeFi investment tools',
+  },
+  {
+    id: '14',
+    title: 'Liquid Staking Derivatives Paris',
+    summary: 'French DeFi protocol introduces novel liquid staking derivatives with improved capital efficiency.',
+    lat: 48.8566,
+    lng: 2.3522,
+    category: 'trend',
+    heat: 77,
+    metrics: { news: 72, reddit: 80, twitter: 78, googleTrend: 74 },
+    timeline: [
+      { date: '2024-01-20', title: 'Protocol launch', description: 'LSD product goes live' },
+    ],
+    related: [
+      { name: 'Paris', type: 'location' },
+      { name: 'Lido', type: 'technology' },
+    ],
+    impact: [
+      { area: 'Yield Strategies', level: 'medium', description: 'New yield optimization options' },
+    ],
+    relevanceToUserDomain: 87,
+    domain: 'DeFi investment tools',
+  },
+  {
+    id: '15',
+    title: 'Coinbase Pro API Upgrade',
+    summary: 'Coinbase releases enhanced API with improved rate limits and new DeFi integration endpoints.',
+    lat: 37.8044,
+    lng: -122.2712,
+    category: 'api',
+    heat: 69,
+    metrics: { news: 75, reddit: 65, twitter: 70, googleTrend: 62 },
+    timeline: [
+      { date: '2024-01-27', title: 'API v3', description: 'New version released' },
+    ],
+    related: [
+      { name: 'Coinbase', type: 'organization' },
+      { name: 'Oakland', type: 'location' },
+    ],
+    impact: [
+      { area: 'Integration', level: 'medium', description: 'Easier CEX-DeFi bridges' },
+    ],
+    relevanceToUserDomain: 80,
+    domain: 'DeFi investment tools',
+  },
+];
+
+export const getEventsByDomain = (domain: string): GlobalEvent[] => {
+  // In a real app, this would filter by domain similarity
+  // For MVP, return all events as they're all DeFi-related
+  return mockEvents;
+};
