@@ -118,7 +118,7 @@ export const GlobalEventHeatmapScreen = ({ domain, onReset }: GlobalEventHeatmap
 
         {/* Right Detail Panel */}
         {selectedEvent && (
-          <RightEventDetailPanel event={selectedEvent} onClose={handleCloseDetail} />
+          <RightEventDetailPanel event={selectedEvent} onClose={handleCloseDetail} userDomain={domain} />
         )}
       </div>
     </motion.div>

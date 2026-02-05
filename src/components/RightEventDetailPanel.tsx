@@ -1,7 +1,7 @@
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   X,
-  TrendingUp,
   MessageSquare,
   Hash,
   Search,
@@ -13,6 +13,8 @@ import {
   FileText,
   Share2,
   ExternalLink,
+  Loader2,
+  Check,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -20,10 +22,13 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { GlobalEvent, CATEGORY_CONFIG } from '@/types/event';
+import { generateEventReport } from '@/utils/pdfGenerator';
+import { toast } from 'sonner';
 
 interface RightEventDetailPanelProps {
   event: GlobalEvent | null;
   onClose: () => void;
+  userDomain: string;
 }
 
 const entityIcons = {
@@ -39,13 +44,54 @@ const impactColors = {
   high: 'bg-destructive/20 text-destructive',
 };
 
-export const RightEventDetailPanel = ({ event, onClose }: RightEventDetailPanelProps) => {
+export const RightEventDetailPanel = ({ event, onClose, userDomain }: RightEventDetailPanelProps) => {
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [isGenerated, setIsGenerated] = useState(false);
+
   if (!event) return null;
 
   const config = CATEGORY_CONFIG[event.category];
-  const combinedHeat = Math.round(
-    (event.metrics.news + event.metrics.reddit + event.metrics.twitter + event.metrics.googleTrend) / 4
-  );
+
+  const handleGenerateReport = async () => {
+    setIsGenerating(true);
+    try {
+      // Small delay for UX feedback
+      await new Promise(resolve => setTimeout(resolve, 500));
+      generateEventReport(event, userDomain);
+      setIsGenerated(true);
+      toast.success('Report downloaded successfully!', {
+        description: `PDF report for "${event.title}" has been saved.`,
+      });
+      // Reset after 2 seconds
+      setTimeout(() => setIsGenerated(false), 2000);
+    } catch (error) {
+      toast.error('Failed to generate report', {
+        description: 'Please try again.',
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const handleShare = async () => {
+    const shareData = {
+      title: event.title,
+      text: `Check out this opportunity: ${event.title} - Heat Score: ${event.heat}/100`,
+      url: window.location.href,
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        // User cancelled or error
+      }
+    } else {
+      // Fallback: copy to clipboard
+      await navigator.clipboard.writeText(`${event.title}\n${event.summary}\nHeat Score: ${event.heat}/100`);
+      toast.success('Copied to clipboard!');
+    }
+  };
 
   return (
     <AnimatePresence>
@@ -203,11 +249,33 @@ export const RightEventDetailPanel = ({ event, onClose }: RightEventDetailPanelP
 
         {/* Actions */}
         <div className="p-4 border-t border-border/50 flex gap-2">
-          <Button className="flex-1 bg-primary hover:bg-primary/90">
-            <FileText className="w-4 h-4 mr-2" />
-            Generate Report
+          <Button 
+            className="flex-1 bg-primary hover:bg-primary/90 disabled:opacity-70"
+            onClick={handleGenerateReport}
+            disabled={isGenerating}
+          >
+            {isGenerating ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Generating...
+              </>
+            ) : isGenerated ? (
+              <>
+                <Check className="w-4 h-4 mr-2" />
+                Downloaded!
+              </>
+            ) : (
+              <>
+                <FileText className="w-4 h-4 mr-2" />
+                Generate Report
+              </>
+            )}
           </Button>
-          <Button variant="outline" className="border-border/50">
+          <Button 
+            variant="outline" 
+            className="border-border/50"
+            onClick={handleShare}
+          >
             <Share2 className="w-4 h-4" />
           </Button>
           <Button variant="outline" className="border-border/50">
