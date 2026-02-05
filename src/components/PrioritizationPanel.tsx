@@ -16,14 +16,16 @@ import {
   Eye,
   Globe,
   Handshake,
+  LayoutGrid,
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { PrioritizedAction, ACTION_TYPE_CONFIG, ActionType } from '@/types/prioritization';
+import { ConvertToTicketButton } from '@/components/tickets/ConvertToTicketButton';
 
 interface PrioritizationPanelProps {
   actions: PrioritizedAction[];
@@ -165,6 +167,11 @@ const ActionCard = ({ action, rank }: { action: PrioritizedAction; rank: number 
               </motion.div>
             )}
           </AnimatePresence>
+
+          {/* Convert to Ticket Button */}
+          <div className="mt-4 pt-4 border-t border-border/50">
+            <ConvertToTicketButton action={action} />
+          </div>
         </CardContent>
       </Card>
     </motion.div>
@@ -177,6 +184,8 @@ export const PrioritizationPanel = ({
   onClose,
   domain,
 }: PrioritizationPanelProps) => {
+  const navigate = useNavigate();
+  const hasTickets = actions.length > 0;
   return (
     <motion.div
       className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm"
@@ -279,7 +288,20 @@ export const PrioritizationPanel = ({
             <p className="text-xs text-muted-foreground">
               Priority = Impact(40%) + Risk(20%) + Relevance(20%) - Difficulty(10%) - Cost(10%)
             </p>
-            <Button onClick={onClose}>Close</Button>
+            <div className="flex items-center gap-3">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  onClose();
+                  navigate('/action-board');
+                }}
+                className="gap-2"
+              >
+                <LayoutGrid className="w-4 h-4" />
+                View Action Board
+              </Button>
+              <Button onClick={onClose}>Close</Button>
+            </div>
           </div>
         </div>
       </motion.div>
